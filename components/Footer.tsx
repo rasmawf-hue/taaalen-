@@ -87,7 +87,7 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
               <li className="flex items-center gap-3">
                 <Mail className="text-secondary flex-shrink-0" size={20} />
                 <div className="flex flex-col">
-                    <span>info@talen.com</span>
+                    <a href="mailto:info@talen.ly" className="hover:text-white transition-colors">info@talen.ly</a>
                 </div>
               </li>
             </ul>

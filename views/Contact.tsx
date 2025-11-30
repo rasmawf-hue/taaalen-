@@ -1,8 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Send, Facebook, ExternalLink } from 'lucide-react';
 import { SectionTitle } from '../components/SectionTitle';
 
 const Contact: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    message: ''
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Construct email body
+    const subject = encodeURIComponent(`استفسار جديد من الموقع: ${formData.name}`);
+    const body = encodeURIComponent(
+      `الاسم: ${formData.name}\n` +
+      `رقم الهاتف: ${formData.phone}\n` +
+      `البريد الإلكتروني: ${formData.email}\n\n` +
+      `الرسالة:\n${formData.message}`
+    );
+
+    // Open mail client
+    window.location.href = `mailto:info@talen.ly?subject=${subject}&body=${body}`;
+  };
+
   return (
     <div className="py-20 bg-bg-light min-h-screen animate-fade-in">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -48,8 +76,9 @@ const Contact: React.FC = () => {
                 </div>
                 <div>
                   <h4 className="font-bold text-lg mb-1 text-secondary">البريد الإلكتروني</h4>
-                  <p className="text-gray-200">info@talen.com</p>
-                  <p className="text-gray-200">sales@talen.com</p>
+                  <a href="mailto:info@talen.ly" className="text-gray-200 hover:text-white transition-colors block">
+                    info@talen.ly
+                  </a>
                 </div>
               </div>
 
@@ -99,26 +128,57 @@ const Contact: React.FC = () => {
           {/* Form */}
           <div className="p-8 lg:p-12">
             <h3 className="text-2xl font-bold text-primary mb-8">أرسل لنا رسالة</h3>
-            <form onSubmit={(e) => { e.preventDefault(); alert('تم إرسال رسالتك بنجاح!'); }}>
+            <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div className="flex flex-col gap-2">
                   <label className="font-medium text-gray-700">الاسم الكامل</label>
-                  <input type="text" required className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="الاسم" />
+                  <input 
+                    type="text" 
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required 
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" 
+                    placeholder="الاسم" 
+                  />
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="font-medium text-gray-700">رقم الهاتف</label>
-                  <input type="tel" required className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="09X XXXXXXX" />
+                  <input 
+                    type="tel" 
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required 
+                    className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" 
+                    placeholder="09X XXXXXXX" 
+                  />
                 </div>
               </div>
               
               <div className="flex flex-col gap-2 mb-6">
                 <label className="font-medium text-gray-700">البريد الإلكتروني (اختياري)</label>
-                <input type="email" className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="email@example.com" />
+                <input 
+                  type="email" 
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" 
+                  placeholder="email@example.com" 
+                />
               </div>
 
               <div className="flex flex-col gap-2 mb-8">
                 <label className="font-medium text-gray-700">رسالتك</label>
-                <textarea rows={5} required className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="كيف يمكننا مساعدتك؟"></textarea>
+                <textarea 
+                  rows={5} 
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required 
+                  className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" 
+                  placeholder="كيف يمكننا مساعدتك؟"
+                ></textarea>
               </div>
 
               <button type="submit" className="w-full bg-primary text-white py-4 rounded-xl font-bold text-lg hover:bg-primary-dark transition-all flex items-center justify-center gap-2">
